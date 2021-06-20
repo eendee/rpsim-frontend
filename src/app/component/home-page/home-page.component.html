@@ -1,0 +1,96 @@
+<div class="row">
+  <div class="col-sm-12">
+    <form>
+      <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Source Paper</mat-label>
+          <mat-select [value]="sourcePaper">
+            <mat-option
+              [value]="p"
+              (onSelectionChange)="onPaperSelectedChanged($event, 1)"
+              *ngFor="let p of papers"
+              >{{ p.id }} {{ p.title }}</mat-option
+            >
+          </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Target Paper</mat-label>
+          <mat-select [value]="targetPaper">
+            <mat-option
+              [value]="p"
+              (onSelectionChange)="onPaperSelectedChanged($event, 2)"
+              *ngFor="let p of papers"
+              >{{ p.id }} {{ p.title }}</mat-option
+            >
+          </mat-select>
+      </mat-form-field>
+    </form>
+    <p class="float-right" >
+      <button [disabled] ="sourcePaper == null || targetPaper == null"  mat-raised-button color="primary"(click)="comparePapers()">Compare</button>
+    </p>
+    <mat-progress-bar
+    [hidden]="hideSpinner"
+    mode="indeterminate"
+    ></mat-progress-bar>
+  </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-6">
+        <div  style="height: 500px; overflow-y: auto;">
+          <h5 [hidden]="false">Source</h5>
+          <mat-progress-bar
+          [hidden]="hideSourceSpinner"
+          mode="indeterminate"
+          ></mat-progress-bar>
+
+          <mat-card  *ngFor="let p of sourceParagraphs ; let indexOfelement=index;" class="mb-2 {{p.isInSpotlight == true? 'isActive' : ''}}">                             
+              <p><span matBadge="{{indexOfelement+1}}" matBadgeOverlap="false"></span></p>
+              <p>{{p.sentence}}</p> 
+              <mat-card-actions>
+                <button [disabled]="targetParagraphsCopy == undefined || targetParagraphsCopy.length == 0" color="primary"(click)="getParagraphResult(indexOfelement)" mat-button>Spotlight</button>
+              </mat-card-actions>
+          </mat-card>  
+        </div>        
+    </div>
+    <div class="col-sm-6">
+        <div>
+          <h5 [hidden]="false">Target</h5>
+          <mat-card  *ngFor="let p of targetParagraphsCopy ; let indexOfelement=index;" class="mb-2">    
+              <mat-accordion [hidden]="!isInCompareMode">
+                  <mat-expansion-panel>
+                      <mat-expansion-panel-header>
+                        <mat-panel-title>
+                          <mat-progress-bar class="green-progress" mode="determinate" value="{{p.score}}"></mat-progress-bar>
+                        </mat-panel-title>
+                      </mat-expansion-panel-header>
+                      <!-- <p style="font-size: .4em;">
+                        <mat-progress-spinner
+                          class="example-margin"
+                          color="accent"
+                          mode="determinate"
+                          [value]="p.score">
+                      </mat-progress-spinner>
+                      </p> -->
+                      <div *ngIf="p.result">
+                        <p>
+                          {{p.result.topicModel.explanation}}
+                        </p>
+                        
+                        <div *ngIf="p.result.commonWords.length>0">
+                          <h5>Common words:</h5>
+                          <span *ngFor="let item of p.result.commonWords">
+                           <h6> {{item}}</h6>
+                          </span>
+                        </div>
+
+                      </div>
+                    </mat-expansion-panel>
+              </mat-accordion>                                      
+              <p><span matBadge="{{p.originalParagraphId? p.originalParagraphId +1: indexOfelement+1 }}" matBadgeOverlap="false"></span></p>
+              <p>{{p.score | number : '1.2-2'}}</p>
+              <p>{{p.sentence}}</p> 
+          </mat-card>
+        </div>         
+    </div>
+</div>
