@@ -84,6 +84,7 @@ export class HomePageComponent implements OnInit {
   }
 
   loadPapers(){
+    // console.log("getting papers")
     this.apiService.getResearchPapersList().subscribe(
       (data)=>{
         this.papers = data.dataset;

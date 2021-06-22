@@ -54,7 +54,7 @@
         </div>        
     </div>
     <div class="col-sm-6">
-        <div>
+        <div style="height: 900px; overflow-y: auto;">
           <h5 [hidden]="false">Target</h5>
           <mat-card  *ngFor="let p of targetParagraphsCopy ; let indexOfelement=index;" class="mb-2">    
               <mat-accordion [hidden]="!isInCompareMode">
@@ -80,7 +80,7 @@
                         <div *ngIf="p.result.commonWords.length>0">
                           <h5>Common words:</h5>
                           <span *ngFor="let item of p.result.commonWords">
-                           <h6> {{item}}</h6>
+                           <p> {{item}}</p>
                           </span>
                         </div>
 
