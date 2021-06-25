@@ -1,8 +1,8 @@
 export class ComparisonResult{
     score : string  
     explanation: string[]
-    matches?: number
-    count?: number
+    containment?: string[]
+    ttr: string
 }
 
 export class ComparisonResultSet{

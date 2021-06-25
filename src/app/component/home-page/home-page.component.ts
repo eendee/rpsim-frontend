@@ -84,7 +84,6 @@ export class HomePageComponent implements OnInit {
   }
 
   loadPapers(){
-    // console.log("getting papers")
     this.apiService.getResearchPapersList().subscribe(
       (data)=>{
         this.papers = data.dataset;
@@ -100,11 +99,8 @@ export class HomePageComponent implements OnInit {
     this.apiService.getResults(this.sourcePaper.id, this.targetPaper.id).subscribe(
       (data)=>{
         console.log(data)
-        // this.comparisonResults = data.results;
-        // console.log(this.comparisonResults)
         this.hideSpinner = true;        
         this.isInCompareMode = true;
-        this.showResults();
       },
       (error)=>{
         console.log(error)
@@ -141,36 +137,4 @@ export class HomePageComponent implements OnInit {
       }
     )
   }
-
-  showResults(sourceParagraphId = 0){
-    // let counter = 0;
-    // this.targetParagraphsCopy =  JSON.parse(JSON.stringify(this.targetParagraphs));
-    // this.targetParagraphsCopy.forEach((x)=>{
-    //     x.score = parseFloat( this.comparisonResults[sourceParagraphId][counter].topic_model_sim ) * 100;
-    //     x.originalParagraphId = counter;
-    //     counter ++;
-    // })
-    // this.targetParagraphsCopy.sort((x,y)=>y.score - x.score)
-
-  }
-
-  // compareParagraph(paragraphId: number){
-  //   this.sourceParagraphs.forEach(x=>x.isInSpotlight = false);
-  //   this.sourceParagraphs[paragraphId].isInSpotlight = true;
-  //   this.showResults(paragraphId)
-  // }
-
-  // loadSinglePaper(paperId: string) : ParagraphString[]{
-  //   this.apiService.getReseachPaperById(paperId).subscribe(
-  //     (data)=>{
-  //       console.log(data);
-  //       return data.dataset;
-  //     },
-  //     (error)=>{
-  //       console.log(error)
-  //     }
-  //   )
-  //   return null;
-  // }
-
 }

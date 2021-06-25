@@ -1,7 +1,8 @@
 <div class="row">
   <div class="col-sm-12">
-    <form>
-      <mat-form-field appearance="fill" class="full-width">
+    <form class="row">
+      <div class="col-sm-6">
+        <mat-form-field appearance="fill" class="full-width">
           <mat-label>Source Paper</mat-label>
           <mat-select [value]="sourcePaper">
             <mat-option
@@ -11,9 +12,15 @@
               >{{ p.id }} {{ p.title }}</mat-option
             >
           </mat-select>
-      </mat-form-field>
+        </mat-form-field>
+        <div *ngIf="sourcePaper" class="backrnd">
+          <h4 >Abstract</h4>
+          {{ sourcePaper?.summary }}
+        </div>
+      </div>
 
-      <mat-form-field appearance="fill" class="full-width">
+      <div class="col-sm-6">
+        <mat-form-field appearance="fill" class="full-width">
           <mat-label>Target Paper</mat-label>
           <mat-select [value]="targetPaper">
             <mat-option
@@ -23,11 +30,24 @@
               >{{ p.id }} {{ p.title }}</mat-option
             >
           </mat-select>
-      </mat-form-field>
+        </mat-form-field>
+        <div *ngIf="targetPaper" class="backrnd">
+          <h4 >Abstract</h4>
+          {{ targetPaper?.summary }}
+        </div>
+      </div>
+
+
     </form>
-    <p class="float-right" >
+
+    <div [hidden] ="sourcePaper == null || targetPaper == null">
+      
+    </div>
+    <mat-divider></mat-divider>
+    <!-- <p class="float-right" >
       <button [disabled] ="sourcePaper == null || targetPaper == null"  mat-raised-button color="primary"(click)="comparePapers()">Compare</button>
-    </p>
+    </p> -->
+
     <mat-progress-bar
     [hidden]="hideSpinner"
     mode="indeterminate"
@@ -45,51 +65,54 @@
           ></mat-progress-bar>
 
           <mat-card  *ngFor="let p of sourceParagraphs ; let indexOfelement=index;" class="mb-2 {{p.isInSpotlight == true? 'isActive' : ''}}">                             
+            <div [hidden]="p.sentence.length < 100">
               <p><span matBadge="{{indexOfelement+1}}" matBadgeOverlap="false"></span></p>
+              <br>
               <p>{{p.sentence}}</p> 
               <mat-card-actions>
                 <button [disabled]="targetParagraphsCopy == undefined || targetParagraphsCopy.length == 0" color="primary"(click)="getParagraphResult(indexOfelement)" mat-button>Spotlight</button>
               </mat-card-actions>
+            </div>
           </mat-card>  
         </div>        
     </div>
     <div class="col-sm-6">
         <div style="height: 900px; overflow-y: auto;">
           <h5 [hidden]="false">Target</h5>
-          <mat-card  *ngFor="let p of targetParagraphsCopy ; let indexOfelement=index;" class="mb-2">    
+          <mat-card  *ngFor="let p of targetParagraphsCopy; let indexOfelement=index;" class="mb-2">    
+            <div [hidden]="p.sentence.length < 100">
+              
               <mat-accordion [hidden]="!isInCompareMode">
                   <mat-expansion-panel>
-                      <mat-expansion-panel-header>
-                        <mat-panel-title>
-                          <mat-progress-bar class="green-progress" mode="determinate" value="{{p.score}}"></mat-progress-bar>
-                        </mat-panel-title>
-                      </mat-expansion-panel-header>
-                      <!-- <p style="font-size: .4em;">
-                        <mat-progress-spinner
-                          class="example-margin"
-                          color="accent"
-                          mode="determinate"
-                          [value]="p.score">
-                      </mat-progress-spinner>
-                      </p> -->
-                      <div *ngIf="p.result">
-                        <p>
-                          {{p.result.topicModel.explanation}}
-                        </p>
-                        
-                        <div *ngIf="p.result.commonWords.length>0">
-                          <h5>Common words:</h5>
-                          <span *ngFor="let item of p.result.commonWords">
-                           <p> {{item}}</p>
-                          </span>
-                        </div>
-
-                      </div>
-                    </mat-expansion-panel>
-              </mat-accordion>                                      
+                    <mat-expansion-panel-header>
+                      <mat-panel-title>
+                        <mat-progress-bar class="green-progress" mode="determinate" value="{{p.score}}"></mat-progress-bar>
+                      </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <div *ngIf="p.result">
+                      <p>
+                        {{p.result.topicModel.explanation}}
+                      </p>
+                      <p>
+                        {{p.result.doc2vec?.explanation[1]}}
+                      </p>
+                      <p>
+                        {{p.result.ttr}}
+                      </p>
+                    </div>
+                  </mat-expansion-panel>
+              </mat-accordion>         
+              <br>                             
               <p><span matBadge="{{p.originalParagraphId? p.originalParagraphId +1: indexOfelement+1 }}" matBadgeOverlap="false"></span></p>
               <p>{{p.score | number : '1.2-2'}}</p>
-              <p>{{p.sentence}}</p> 
+              <p>
+                <span *ngFor="let sentence of p.sentence.split('.'); let indexOfSentence=index" 
+                  class="{{p.result?.doc2vec?.containment.length> indexOfSentence && p.result?.doc2vec?.containment[indexOfSentence] == 1 ? 'isContained' : ''}}">
+                  <span *ngIf="indexOfSentence != 0">.</span>  
+                  <span *ngFor="let word of sentence.split(' '); let indexOfWord=index" class="{{p.result?.commonWords.indexOf(word) > 0? 'isMatched' : ''}}"> {{word}}</span>
+                </span>
+              </p> 
+            </div>
           </mat-card>
         </div>         
     </div>

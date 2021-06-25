@@ -3,6 +3,7 @@ import { ComparisonResultSet } from "./results";
 export class Paper{
     id : string;
     title: string;
+    summary: string;
 }
 
 export class ParagraphString{

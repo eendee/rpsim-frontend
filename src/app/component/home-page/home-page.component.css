@@ -31,3 +31,16 @@ button {
 .isActive {
   border: 1px solid green;
 }
+
+.isMatched {
+  color: rgb(30, 90, 30);
+  font-weight: bolder;
+}
+
+.backrnd {
+  background-color: honeydew;
+}
+
+.isContained {
+  text-decoration: underline;
+}
