@@ -5,6 +5,7 @@ import { MatOptionSelectionChange } from '@angular/material/core';
 import { ComparisonResult, ParagraphResult, ComparisonResultSet } from 'src/app/common/results';
 import {ProgressSpinnerMode} from '@angular/material/progress-spinner';
 import {ThemePalette} from '@angular/material/core';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-home-page',
@@ -32,9 +33,15 @@ export class HomePageComponent implements OnInit {
 
   comparedParagraph: number = 0;
 
-  constructor(private apiService: ApiResquestService) { }
+  hideExplanations = true;
+
+  constructor(private apiService: ApiResquestService, private router: ActivatedRoute) { }
 
   ngOnInit(): void {
+    console.log(this.router.snapshot.queryParamMap.get('mode'));
+    if(this.router.snapshot.queryParamMap.has("mode")){
+      this.hideExplanations = false;
+    }
     this.loadPapers();
   }
 

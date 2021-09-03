@@ -82,7 +82,7 @@
           <mat-card  *ngFor="let p of targetParagraphsCopy; let indexOfelement=index;" class="mb-2">    
             <div [hidden]="p.sentence.length < 100">
               
-              <mat-accordion [hidden]="!isInCompareMode">
+              <mat-accordion [hidden]="!isInCompareMode || hideExplanations">
                   <mat-expansion-panel>
                     <mat-expansion-panel-header>
                       <mat-panel-title>
@@ -104,12 +104,12 @@
               </mat-accordion>         
               <br>                             
               <p><span matBadge="{{p.originalParagraphId? p.originalParagraphId +1: indexOfelement+1 }}" matBadgeOverlap="false"></span></p>
-              <p>{{p.score | number : '1.2-2'}}</p>
+              <p [hidden]="hideExplanations">{{p.score | number : '1.2-2'}}</p>
               <p>
                 <span *ngFor="let sentence of p.sentence.split('.'); let indexOfSentence=index" 
-                  class="{{p.result?.doc2vec?.containment.length> indexOfSentence && p.result?.doc2vec?.containment[indexOfSentence] == 1 ? 'isContained' : ''}}">
+                  class="{{p.result?.doc2vec?.containment.length> indexOfSentence && p.result?.doc2vec?.containment[indexOfSentence] == 1 && !hideExplanations? 'isContained' : ''}}">
                   <span *ngIf="indexOfSentence != 0">.</span>  
-                  <span *ngFor="let word of sentence.split(' '); let indexOfWord=index" class="{{p.result?.commonWords.indexOf(word) > 0? 'isMatched' : ''}}"> {{word}}</span>
+                  <span *ngFor="let word of sentence.split(' '); let indexOfWord=index" class="{{p.result?.commonWords.indexOf(word) > 0 && !hideExplanations? 'isMatched' : ''}}"> {{word}}</span>
                 </span>
               </p> 
             </div>
