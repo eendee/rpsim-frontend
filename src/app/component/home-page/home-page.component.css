@@ -44,3 +44,8 @@ button {
 .isContained {
   text-decoration: underline;
 }
+
+.paragraph {
+  font-size: 0.7em;
+  font-weight: bold;
+}

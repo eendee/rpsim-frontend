@@ -35,13 +35,25 @@ export class HomePageComponent implements OnInit {
 
   hideExplanations = true;
 
+  intendedSource = "";
+  intendedTarget = "";
+
+  sourcePapers: Paper[];
+  targetPapers: Paper[];
+
   constructor(private apiService: ApiResquestService, private router: ActivatedRoute) { }
 
   ngOnInit(): void {
-    console.log(this.router.snapshot.queryParamMap.get('mode'));
     if(this.router.snapshot.queryParamMap.has("mode")){
       this.hideExplanations = false;
     }
+    if(this.router.snapshot.queryParamMap.has("source")){
+      this.intendedSource = this.router.snapshot.queryParamMap.get("source");
+    }
+    if(this.router.snapshot.queryParamMap.has("target")){
+      this.intendedTarget = this.router.snapshot.queryParamMap.get("target");
+    }
+    console.log(this.intendedSource.length, this.intendedTarget.length)
     this.loadPapers();
   }
 
@@ -94,6 +106,21 @@ export class HomePageComponent implements OnInit {
     this.apiService.getResearchPapersList().subscribe(
       (data)=>{
         this.papers = data.dataset;
+
+        if(this.intendedSource.length > 0){
+          this.sourcePapers = this.papers.filter(x=>x.id == this.intendedSource)
+        }
+        else{
+          this.sourcePapers = this.papers
+        }
+
+        
+        if(this.intendedTarget.length > 0){
+          this.targetPapers = this.papers.filter(x=>x.id == this.intendedTarget)
+        }
+        else{
+          this.targetPapers = this.papers
+        }
       },
       (error)=>{
         console.log(error)
@@ -143,5 +170,10 @@ export class HomePageComponent implements OnInit {
         console.log(error)
       }
     )
+  }
+
+  resetTargetParagraphs(){
+    this.sourceParagraphs.forEach(x=>x.isInSpotlight = false);
+    this.targetParagraphsCopy.sort((x,y)=>x.originalParagraphId - y.originalParagraphId)
   }
 }

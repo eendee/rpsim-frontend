@@ -8,7 +8,7 @@
             <mat-option
               [value]="p"
               (onSelectionChange)="onPaperSelectedChanged($event, 1)"
-              *ngFor="let p of papers"
+              *ngFor="let p of sourcePapers"
               >{{ p.id }} {{ p.title }}</mat-option
             >
           </mat-select>
@@ -26,7 +26,7 @@
             <mat-option
               [value]="p"
               (onSelectionChange)="onPaperSelectedChanged($event, 2)"
-              *ngFor="let p of papers"
+              *ngFor="let p of targetPapers"
               >{{ p.id }} {{ p.title }}</mat-option
             >
           </mat-select>
@@ -66,11 +66,12 @@
 
           <mat-card  *ngFor="let p of sourceParagraphs ; let indexOfelement=index;" class="mb-2 {{p.isInSpotlight == true? 'isActive' : ''}}">                             
             <div [hidden]="p.sentence.length < 100">
-              <p><span matBadge="{{indexOfelement+1}}" matBadgeOverlap="false"></span></p>
+              <p class="paragraph">Paragraph {{indexOfelement+1}}</p>
               <br>
               <p>{{p.sentence}}</p> 
               <mat-card-actions>
-                <button [disabled]="targetParagraphsCopy == undefined || targetParagraphsCopy.length == 0" color="primary"(click)="getParagraphResult(indexOfelement)" mat-button>Spotlight</button>
+                <button [disabled]="targetParagraphsCopy == undefined || targetParagraphsCopy.length == 0" 
+                color="primary"(click)="getParagraphResult(indexOfelement)" mat-raised-button>Spotlight</button>
               </mat-card-actions>
             </div>
           </mat-card>  
@@ -78,7 +79,8 @@
     </div>
     <div class="col-sm-6">
         <div style="height: 900px; overflow-y: auto;">
-          <h5 [hidden]="false">Target</h5>
+          <h5 [hidden]="false">Target <button [hidden]="!isInCompareMode" class="pull-right" color="secondary" mat-button (click)="resetTargetParagraphs()">Reset</button> </h5>
+          
           <mat-card  *ngFor="let p of targetParagraphsCopy; let indexOfelement=index;" class="mb-2">    
             <div [hidden]="p.sentence.length < 100">
               
@@ -102,8 +104,8 @@
                     </div>
                   </mat-expansion-panel>
               </mat-accordion>         
-              <br>                             
-              <p><span matBadge="{{p.originalParagraphId? p.originalParagraphId +1: indexOfelement+1 }}" matBadgeOverlap="false"></span></p>
+              <br>   
+              <p class="paragraph">Paragraph {{p.originalParagraphId? p.originalParagraphId +1: indexOfelement+1 }}</p>
               <p [hidden]="hideExplanations">{{p.score | number : '1.2-2'}}</p>
               <p>
                 <span *ngFor="let sentence of p.sentence.split('.'); let indexOfSentence=index" 
