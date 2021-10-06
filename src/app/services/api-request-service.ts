@@ -26,7 +26,9 @@ export class ApiResquestService {
     return this.httpClient.get<ComparisonResultSet[]>(`${this.baseUrl}compare?source=${source}&target=${target}`);
   }
 
-  getResultsPerParagraph(source :string, target: string, paragraphId: string):Observable<ParagraphResult>{
-    return this.httpClient.get<ParagraphResult>(`${this.baseUrl}compare_paragraph?source=${source}&target=${target}&source_paragraph_id=${paragraphId}`);
+  getResultsPerParagraph(source :string, target: string, paragraphId: string, uniqueId: string):Observable<ParagraphResult>{
+    return this
+    .httpClient
+    .get<ParagraphResult>(`${this.baseUrl}compare_paragraph?source=${source}&target=${target}&source_paragraph_id=${paragraphId}&uid=${uniqueId}`);
   }
 }

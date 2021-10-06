@@ -79,16 +79,19 @@
     </div>
     <div class="col-sm-6">
         <div style="height: 900px; overflow-y: auto;">
-          <h5 [hidden]="false">Target <button [hidden]="!isInCompareMode" class="pull-right" color="secondary" mat-button (click)="resetTargetParagraphs()">Reset</button> </h5>
+          <h5 [hidden]="false">Target <button [hidden]="!isInCompareMode" class="pull-end" color="secondary" mat-button (click)="resetTargetParagraphs()">Reset</button> </h5>
           
           <mat-card  *ngFor="let p of targetParagraphsCopy; let indexOfelement=index;" class="mb-2">    
             <div [hidden]="p.sentence.length < 100">
               
+              <span [hidden]="!isInCompareMode" >
+                <span class="badge">Score: {{p.score | number : '1.2-2'}}</span>
+                <mat-progress-bar class="green-progress" mode="determinate" value="{{p.score}}"></mat-progress-bar>
+              </span>
               <mat-accordion [hidden]="!isInCompareMode || hideExplanations">
                   <mat-expansion-panel>
                     <mat-expansion-panel-header>
                       <mat-panel-title>
-                        <mat-progress-bar class="green-progress" mode="determinate" value="{{p.score}}"></mat-progress-bar>
                       </mat-panel-title>
                     </mat-expansion-panel-header>
                     <div *ngIf="p.result">
@@ -106,7 +109,6 @@
               </mat-accordion>         
               <br>   
               <p class="paragraph">Paragraph {{p.originalParagraphId? p.originalParagraphId +1: indexOfelement+1 }}</p>
-              <p [hidden]="hideExplanations">{{p.score | number : '1.2-2'}}</p>
               <p>
                 <span *ngFor="let sentence of p.sentence.split('.'); let indexOfSentence=index" 
                   class="{{p.result?.doc2vec?.containment.length> indexOfSentence && p.result?.doc2vec?.containment[indexOfSentence] == 1 && !hideExplanations? 'isContained' : ''}}">

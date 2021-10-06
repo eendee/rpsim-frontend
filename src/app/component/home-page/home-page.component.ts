@@ -41,6 +41,8 @@ export class HomePageComponent implements OnInit {
   sourcePapers: Paper[];
   targetPapers: Paper[];
 
+  uniqueId = "";
+
   constructor(private apiService: ApiResquestService, private router: ActivatedRoute) { }
 
   ngOnInit(): void {
@@ -55,6 +57,7 @@ export class HomePageComponent implements OnInit {
     }
     console.log(this.intendedSource.length, this.intendedTarget.length)
     this.loadPapers();
+    this.uniqueId = this._uuidv4();
   }
 
   onPaperSelectedChanged(event: MatOptionSelectionChange, input: number): MatOptionSelectionChange {
@@ -146,7 +149,7 @@ export class HomePageComponent implements OnInit {
     this.hideSpinner = false;
     this.sourceParagraphs.forEach(x=>x.isInSpotlight = false);
     this.sourceParagraphs[sourceParagraphId].isInSpotlight = true;
-    this.apiService.getResultsPerParagraph(this.sourcePaper.id, this.targetPaper.id, sourceParagraphId.toString() ).subscribe(
+    this.apiService.getResultsPerParagraph(this.sourcePaper.id, this.targetPaper.id, sourceParagraphId.toString(), this.uniqueId).subscribe(
       (data)=>{
         this.paragraphComparisonResults = data.results;
         
@@ -176,4 +179,12 @@ export class HomePageComponent implements OnInit {
     this.sourceParagraphs.forEach(x=>x.isInSpotlight = false);
     this.targetParagraphsCopy.sort((x,y)=>x.originalParagraphId - y.originalParagraphId)
   }
+
+  _uuidv4() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+      var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+      return v.toString(16);
+    });
+  }
+  
 }
